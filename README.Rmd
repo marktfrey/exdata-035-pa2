@@ -1,4 +1,9 @@
-# Exploring PM2.5 Emissions Data
+---
+title: "Exploring PM2.5 Emissions Data"
+output: 
+  html_document:
+    keep_md: true
+---
 
 ### Peer Assessment 2, Exploratory Data Analysis
 
@@ -6,7 +11,26 @@ The overall goal of this assignment is to explore the National Emissions Invento
 
 You must address the following questions and tasks in your exploratory analysis. For each question/task you will need to make a single plot. Unless specified, you can use any plotting system in R to make your plot.
 
+```{r cache=TRUE, echo=FALSE}
+# Check for data dir
+if (!file.exists("data")) {
+  dir.create("data")
+}
 
+# Check for data source file, download if needed.
+if (!file.exists("data/raw.zip")) {
+  download.file("https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip", destfile="data/raw.zip", method="curl")
+}
+
+# If the zipfile exists but hasn't been extracted, extract it.
+if (!file.exists("data/summarySCC_PM25.rds")) {
+  unzip("data/raw.zip", exdir="data", overwrite=FALSE)
+}
+
+# Read the data into some variables
+emissions_data <- readRDS("data/summarySCC_PM25.rds")
+source_codes   <- readRDS("data/Source_Classification_Code.rds")
+```
 
 ---
 
@@ -14,8 +38,7 @@ You must address the following questions and tasks in your exploratory analysis.
 
 > Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Using the base plotting system, make a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
 
-
-```r
+```{r echo=TRUE}
 # We want TOTAL PM2.5 by YEAR for this plot.
 emissions_by_year <- aggregate(emissions_data$Emissions, by = list(year = emissions_data$year), sum)
 
@@ -38,10 +61,7 @@ barplot( emissions_by_year$x,
 axis(side=2, at= 1000000 * c(0:max_y_mil), labels = c(0:max_y_mil))
 ```
 
-![](README_files/figure-html/unnamed-chunk-2-1.png) 
-
-
-```r
+```{r echo=TRUE, results='hide'}
 # Use the png graphic device to generate the image file
 dev.copy(png, file = "plot1.png", width = 480, height = 480)
 dev.off()
@@ -53,8 +73,7 @@ dev.off()
 
 > Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? Use the base plotting system to make a plot answering this question.
 
-
-```r
+```{r echo=TRUE}
 # Get the data/year for Baltimore City
 baltimore_data <- emissions_data[emissions_data$fips == '24510', ]
 baltimore_pm25_by_year <- aggregate(baltimore_data$Emissions, by = list(year = baltimore_data$year), sum)
@@ -72,10 +91,7 @@ plot(baltimore_pm25_by_year$year,
 lines(baltimore_pm25_by_year$year, baltimore_pm25_by_year$x)
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-1.png) 
-
-
-```r
+```{r echo=TRUE, results='hide'}
 # Use the png graphic device to generate the image file
 dev.copy(png, file = "plot2.png", width = 480, height = 480)
 dev.off()
@@ -89,8 +105,7 @@ Yes, we can see that total PM2.5 emissions have decreased in Baltimore over the 
 
 > Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999–2008 for Baltimore City? Which have seen increases in emissions from 1999–2008? Use the ggplot2 plotting system to make a plot answer this question.
 
-
-```r
+```{r echo=TRUE}
 # Get the data for baltimore
 baltimore_data <- emissions_data[emissions_data$fips == '24510', ]
 
@@ -101,13 +116,7 @@ baltimore_pm25_by_year_and_type$year <- as.factor(baltimore_pm25_by_year_and_typ
 
 library("reshape2")
 library("ggplot2")
-```
 
-```
-## Warning: package 'ggplot2' was built under R version 3.2.3
-```
-
-```r
 ggplot(baltimore_pm25_by_year_and_type, 
        aes(x = year, y = x, color = type, fill = type)
 ) + 
@@ -119,11 +128,7 @@ ggplot(baltimore_pm25_by_year_and_type,
     geom_hline(aes(yintercept = x, color = type), 
                data = baltimore_pm25_by_year_and_type[baltimore_pm25_by_year_and_type$year == min(as.character(baltimore_pm25_by_year_and_type$year)), ], 
                linetype = 'dashed')
-```
 
-![](README_files/figure-html/unnamed-chunk-6-1.png) 
-
-```r
 ggplot(baltimore_pm25_by_year_and_type, 
        aes(x = year, y = x, group = type, color = type)
       ) + 
@@ -134,12 +139,10 @@ ggplot(baltimore_pm25_by_year_and_type,
       geom_hline(aes(yintercept = x, color = type), 
                data = baltimore_pm25_by_year_and_type[baltimore_pm25_by_year_and_type$year == min(as.character(baltimore_pm25_by_year_and_type$year)), ], 
                linetype = 'dashed')
+
 ```
 
-![](README_files/figure-html/unnamed-chunk-6-2.png) 
-
-
-```r
+```{r echo=TRUE, results='hide'}
 # Use the png graphic device to generate the image file
 dev.copy(png, file = "plot3.png", width = 480, height = 480)
 dev.off()

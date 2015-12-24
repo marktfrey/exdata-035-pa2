@@ -17,4 +17,7 @@ vignettes/*.pdf
 # data directory
 data/
 
+# knitr cache
+README_cache/
+
 
