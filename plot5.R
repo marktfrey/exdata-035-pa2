@@ -36,7 +36,7 @@ baltimore_mv_source_emissions_by_year$year <- as.factor(baltimore_mv_source_emis
 
 # We want to see the change over time, but there are only four points,
 # so a bar plot may be easier to look at than a line.
-ggplot(baltimore_mv_source_emissions_by_year, aes(x = year, y = x)) +
+bar_chart <- ggplot(baltimore_mv_source_emissions_by_year, aes(x = year, y = x)) +
   geom_bar(stat = 'identity') +
   ggtitle('PM2.5 From Motor-Vehicle Sources in Baltimore City, 1999-2008') +
   xlab('Year') +
@@ -48,6 +48,7 @@ ggplot(baltimore_mv_source_emissions_by_year, aes(x = year, y = x)) +
              data = baltimore_mv_source_emissions_by_year[baltimore_mv_source_emissions_by_year$year ==
                                                           min(as.character(baltimore_mv_source_emissions_by_year$year)), ],
              linetype = 'dashed')
+print(bar_chart)
 
 # Use the png graphic device to generate the image file
 dev.copy(png, file = "plot5.png", width = 480, height = 480)

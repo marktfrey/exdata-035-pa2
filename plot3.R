@@ -29,7 +29,7 @@ baltimore_pm25_by_year_and_type$year <- as.factor(baltimore_pm25_by_year_and_typ
 
 # We want to see the change over time, but there are only four points,
 # so a bar plot may be easier to look at than a line.
-ggplot(baltimore_pm25_by_year_and_type,
+bar_chart <- ggplot(baltimore_pm25_by_year_and_type,
        aes(x = year, y = x, color = type, fill = type)
       ) +
       geom_bar(stat = 'identity') +
@@ -48,6 +48,8 @@ ggplot(baltimore_pm25_by_year_and_type,
                  data = baltimore_pm25_by_year_and_type[baltimore_pm25_by_year_and_type$year ==
                                                         min(as.character(baltimore_pm25_by_year_and_type$year)), ],
                  linetype = 'dashed')
+
+print(bar_chart)
 
 # Use the png graphic device to generate the image file
 dev.copy(png, file = "plot3.png", width = 480, height = 480)

@@ -30,7 +30,7 @@ coal_comb_emissions_by_year$year <- as.factor(coal_comb_emissions_by_year$year)
 
 # We want to see the change over time, but there are only four points,
 # so a bar plot may be easier to look at than a line.
-ggplot(coal_comb_emissions_by_year, aes(x = year, y = x)) +
+bar_chart <- ggplot(coal_comb_emissions_by_year, aes(x = year, y = x)) +
       geom_bar(stat = 'identity') +
       ggtitle('Tons of PM2.5 related to Coal Combustion, by year') +
       xlab('Year') +
@@ -42,6 +42,7 @@ ggplot(coal_comb_emissions_by_year, aes(x = year, y = x)) +
                      data = coal_comb_emissions_by_year[coal_comb_emissions_by_year$year ==
                                                         min(as.character(coal_comb_emissions_by_year$year)), ],
                      linetype = 'dashed')
+print(bar_chart)
 
 # Use the png graphic device to generate the image file
 dev.copy(png, file = "plot4.png", width = 480, height = 480)
