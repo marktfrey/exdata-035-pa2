@@ -11,28 +11,24 @@ emissions_data <- readRDS("data/summarySCC_PM25.rds")
 source_codes   <- readRDS("data/Source_Classification_Code.rds")
 
 # To determine what is meant by 'coal combustion-related' we examine the source-codes
-# data.  The source Short.Name contains a main category / sub category string,
-# and combustion (abbreviated as 'comb') and coal can be found by searching these.
+# data.  The source EI.Sector has information about the sectors, and several of these
+# are Fuel Combustion (subgrouped by type of fuel).  The ones we're interested in are
+# the coal ones.
+coal_comb_sources <- source_codes[grepl('Fuel Comb(.*)Coal', as.character(source_codes$EI.Sector)), ]
 
-# First we need to get all the coal related source codes
-coal_sources <- source_codes[grepl('[cC]oal', as.character(source_codes$Short.Name)), ]
-
-# Then narrow this to the ones that are combustion-related
-coal_comb_sources <- coal_sources[grepl('[cC]omb', as.character(coal_sources$Short.Name)), ]
-
-# This gives us 91 coal-combustion related codes.
+# This gives us 99 coal-combustion related codes (across 3 EI.Sector's)
 # We're interested in the change of particulate output across these codes for the whole country, so
 # we need to filter the main list to the correct codes, then aggregate by year.
 coal_comb_emissions_data <- emissions_data[emissions_data$SCC %in% coal_comb_sources$SCC, ]
 
-coal_comb_emissions_by_year <- aggregate(coal_comb_emissions_data$Emissions, by = list(year = coal_comb_emissions_data$year), sum)
+coal_comb_emissions_by_year <- aggregate(coal_comb_emissions_data$Emissions,
+                                         by = list(year = coal_comb_emissions_data$year),
+                                         sum)
 coal_comb_emissions_by_year$year <- as.factor(coal_comb_emissions_by_year$year) 
 
 # We want to see the change over time, but there are only four points,
 # so a bar plot may be easier to look at than a line.
-ggplot(coal_comb_emissions_by_year, 
-       aes(x = year, y = x),
-      ) + 
+ggplot(coal_comb_emissions_by_year, aes(x = year, y = x)) +
       geom_bar(stat = 'identity') +
       ggtitle('Tons of PM2.5 related to Coal Combustion, by year') +
       xlab('Year') +
