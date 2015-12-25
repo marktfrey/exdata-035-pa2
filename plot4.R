@@ -1,10 +1,12 @@
 ### Question 4
-# 
-# Across the United States, how have emissions 
+#
+# Across the United States, how have emissions
 # from coal combustion-related sources changed from 1999–2008?
 
 # Fetch the data
 source('get_data.R')
+
+library(ggplot2)
 
 # Read in the source data
 emissions_data <- readRDS("data/summarySCC_PM25.rds")
@@ -33,11 +35,12 @@ ggplot(coal_comb_emissions_by_year, aes(x = year, y = x)) +
       ggtitle('Tons of PM2.5 related to Coal Combustion, by year') +
       xlab('Year') +
       ylab('Tons of PM2.5') +
-  
+
       # We'll produce a horizontal line to help identify the relationship of
       # subsequent years to the first observed year.
-      geom_hline(aes(yintercept = x), 
-                     data = coal_comb_emissions_by_year[coal_comb_emissions_by_year$year == min(as.character(coal_comb_emissions_by_year$year)), ], 
+      geom_hline(aes(yintercept = x),
+                     data = coal_comb_emissions_by_year[coal_comb_emissions_by_year$year ==
+                                                        min(as.character(coal_comb_emissions_by_year$year)), ],
                      linetype = 'dashed')
 
 # Use the png graphic device to generate the image file
@@ -45,9 +48,9 @@ dev.copy(png, file = "plot4.png", width = 480, height = 480)
 dev.off()
 
 ### RESULT
-# Across the United States, how have emissions 
+# Across the United States, how have emissions
 # from coal combustion-related sources changed from 1999–2008?
-# 
+#
 # Emissions from coal combustion-related sources have decreased overall
 # during the period from 1999 - 2008.
 #

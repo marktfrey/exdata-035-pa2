@@ -1,8 +1,8 @@
 ### Question 1
-# 
-# Have total emissions from PM2.5 decreased in the United States 
-# from 1999 to 2008? Using the base plotting system, make a plot 
-# showing the total PM2.5 emission from all sources for each of 
+#
+# Have total emissions from PM2.5 decreased in the United States
+# from 1999 to 2008? Using the base plotting system, make a plot
+# showing the total PM2.5 emission from all sources for each of
 # the years 1999, 2002, 2005, and 2008.
 
 # Fetch the data
@@ -12,7 +12,9 @@ source('get_data.R')
 emissions_data <- readRDS("data/summarySCC_PM25.rds")
 
 # We want TOTAL PM2.5 by YEAR for this plot.
-emissions_by_year <- aggregate(emissions_data$Emissions, by = list(year = emissions_data$year), sum)
+emissions_by_year <- aggregate(emissions_data$Emissions,
+                               by = list(year = emissions_data$year),
+                               sum)
 
 # We'll display this as a barplot
 # Since the y-axis is quite large, we'll manually set it to display
@@ -37,7 +39,7 @@ dev.copy(png, file = "plot1.png", width = 480, height = 480)
 dev.off()
 
 ### RESULT
-# Have total emissions from PM2.5 decreased in the United States 
+# Have total emissions from PM2.5 decreased in the United States
 # from 1999 to 2008?
 #
 # Yes, total emissions from PM2.5 have decreased overall for each year

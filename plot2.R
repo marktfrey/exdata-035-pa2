@@ -1,7 +1,7 @@
 ### Question 2
-# 
+#
 # Have total emissions from PM2.5 decreased in the Baltimore City,
-# Maryland (fips == "24510") from 1999 to 2008? Use the base plotting 
+# Maryland (fips == "24510") from 1999 to 2008? Use the base plotting
 # system to make a plot answering this question.
 
 # Fetch the data
@@ -12,10 +12,12 @@ emissions_data <- readRDS("data/summarySCC_PM25.rds")
 
 # Get the data/year for Baltimore City
 baltimore_data <- emissions_data[emissions_data$fips == '24510', ]
-baltimore_pm25_by_year <- aggregate(baltimore_data$Emissions, by = list(year = baltimore_data$year), sum)
+baltimore_pm25_by_year <- aggregate(baltimore_data$Emissions,
+                                    by = list(year = baltimore_data$year),
+                                    sum)
 
 # Well make a line chart since we're looking to show change over time
-plot(baltimore_pm25_by_year$year, 
+plot(baltimore_pm25_by_year$year,
      baltimore_pm25_by_year$x,
      pch = 19,
      main = 'Tons of PM2.5 per year in Baltimore City',
